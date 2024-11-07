@@ -16,7 +16,7 @@
 - framework-ul va fi proiectat pentru a permite funcționalități de bază, cum ar fi rutarea cererilor, manipularea răspunsurilor și suport pentru metode HTTP standard (GET, POST, PUT, DELETE)
 
 ## 1.3 Domeniul de aplicare
-- domeniul de aplicare pentru acest framework sunt aplicatiile simple, prototipuri si microservicii interne
+- domeniile de aplicare pentru acest framework sunt aplicatiile simple, prototipuri si microservicii interne
 
 
 
