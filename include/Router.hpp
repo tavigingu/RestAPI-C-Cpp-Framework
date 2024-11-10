@@ -10,7 +10,7 @@
 
 class Router {
 public:
-    using HandlerFunction = std::function<HttpResponse(const HttpRequest&)>;
+    using HandlerFunction = std::function<void(const HttpRequest&, HttpResponse&)>;
 
     void add_route(const std::string& route, const std::string& method, HandlerFunction handler) {
         routes_[method + " " + route] = handler;

@@ -1,0 +1,143 @@
+400 Bad Request
+
+Descriere: Cererea clientului este sintactic incorectă sau serverul nu poate înțelege cererea.
+Exemple: lipsa unui parametru necesar, cerere malformă.
+401 Unauthorized
+
+Descriere: Clientul nu a furnizat autentificarea corespunzătoare sau a furnizat date incorecte pentru autentificare.
+Exemple: nu există token de autentificare sau tokenul este invalid.
+402 Payment Required
+
+Descriere: Acesta este un cod rezervat pentru viitoare utilizări, dar în prezent nu este folosit de majoritatea serverelor web.
+Exemple: nu există implementare standard, dar ar putea fi folosit pentru plăți (de exemplu, pentru a indica că utilizatorul nu a plătit un serviciu).
+403 Forbidden
+
+Descriere: Clientul are autorizare să acceseze resursa, dar nu are permisiunea de a o face. Efectiv, cererea este interzisă.
+Exemple: încercarea de a accesa o resursă protejată care necesită privilegii suplimentare.
+404 Not Found
+
+Descriere: Resursa solicitată de client nu a fost găsită pe server.
+Exemple: un URL greșit sau un fișier care nu există pe server.
+405 Method Not Allowed
+
+Descriere: Serverul a înțeles cererea, dar metoda HTTP utilizată (de exemplu, POST, GET, PUT, DELETE) nu este permisă pe acea resursă.
+Exemple: încercarea de a accesa o resursă doar cu GET, dar cererea folosește POST.
+406 Not Acceptable
+
+Descriere: Serverul nu poate furniza resursa în formatul cerut de client (de exemplu, formatul de răspuns Accept nu este acceptat).
+Exemple: cererea indică un tip de conținut care nu poate fi furnizat.
+407 Proxy Authentication Required
+
+Descriere: Clientul trebuie să se autentifice cu un proxy pentru a obține acces la resursa solicitată.
+Exemple: eroare de autentificare a proxy-ului.
+408 Request Timeout
+
+Descriere: Serverul nu a primit întreaga cerere într-un interval de timp corespunzător.
+Exemple: clientul nu a trimis cererea completă într-un timp rezonabil.
+409 Conflict
+
+Descriere: Cererea nu poate fi procesată din cauza unui conflict cu starea actuală a resursei.
+Exemple: încercarea de a actualiza o resursă care a fost modificată între timp de altcineva.
+410 Gone
+Descriere: Resursa solicitată a fost permanent eliminată și nu mai este disponibilă.
+Exemple: un fișier care a fost șters din server.
+411 Length Required
+Descriere: Cererea nu include un câmp Content-Length necesar.
+Exemple: cerere POST fără a specifica lungimea corpului cererii.
+412 Precondition Failed
+Descriere: Una sau mai multe condiții de precondiție specificate de client nu sunt îndeplinite.
+Exemple: cererea include un antet If-Match, dar resursa nu corespunde.
+413 Payload Too Large
+Descriere: Corpul cererii este prea mare pentru a fi procesat de server.
+Exemple: încărcarea unui fișier care depășește limita de dimensiune permisă.
+414 URI Too Long
+Descriere: URI-ul cererii este prea lung și nu poate fi procesat de server.
+Exemple: un URL care conține prea mulți parametri.
+415 Unsupported Media Type
+Descriere: Tipul de media trimis de client nu este acceptat de server.
+Exemple: trimiterea unui fișier JSON într-un format care nu este acceptat de server.
+416 Range Not Satisfiable
+Descriere: Serverul nu poate satisface cererea de interval (de exemplu, un fișier care nu poate fi divizat în intervale).
+Exemple: cererea include un interval care nu există în fișier.
+417 Expectation Failed
+Descriere: Serverul nu poate satisface cerințele specificate în antetul Expect al cererii.
+Exemple: clientul include un antet Expect: 100-continue, dar serverul nu poate accepta acest antet.
+418 I'm a teapot
+Descriere: Este un răspuns de glumă definit în cadrul protocoalelor pentru HTTP, conform RFC 2324. Este folosit pentru a semnala că serverul este o „ceainică” și nu poate face ceai.
+Exemple: folosit pentru a ilustra o eroare fictivă.
+421 Misdirected Request
+Descriere: Serverul nu este capabil să proceseze cererea, deoarece aceasta este direcționată greșit.
+Exemple: cerere trimisă către un server care nu este capabil să o proceseze.
+422 Unprocessable Entity
+Descriere: Serverul înțelege cererea, dar nu poate procesa entitatea din cauza unor erori de validare.
+Exemple: datele trimise de client sunt valide sintactic, dar nu respectă regulile de afaceri ale serverului.
+423 Locked
+Descriere: Resursa este blocată și nu poate fi procesată.
+Exemple: fișierul sau resursa este închisă pentru editare de către un alt proces.
+424 Failed Dependency
+Descriere: Cererea nu poate fi procesată din cauza unei erori în cererea anterioară (în cazul unui proces bazat pe dependențe).
+Exemple: eroare într-un flux de lucru de tip tranzacție.
+425 Too Early
+Descriere: Cererea nu poate fi procesată deoarece serverul nu este încă pregătit pentru a o gestiona.
+Exemple: cerere prematură într-un protocol care are nevoie de o fereastră de timp pentru procesare.
+426 Upgrade Required
+Descriere: Serverul solicită upgrade-ul la o versiune mai nouă a protocolului.
+Exemple: cerere făcută cu un protocol învechit.
+427 Unassigned
+Descriere: Cod de stare neatribuit.
+428 Precondition Required
+Descriere: Cererea necesită să fie condiționată de o anumită precondiție.
+Exemple: serverul necesită ca cererea să fie semnată înainte de a o procesa.
+429 Too Many Requests
+Descriere: Clientul a trimis prea multe cereri într-un interval scurt de timp.
+Exemple: erori de tip rate-limiting.
+431 Request Header Fields Too Large
+Descriere: Anteturile cererii sunt prea mari pentru a fi procesate.
+Exemple: anteturi HTTP mari sau prea multe.
+451 Unavailable For Legal Reasons
+Descriere: Resursa solicitată nu este disponibilă din motive legale.
+Exemple: conținut blocat în anumite jurisdicții legale.
+Coduri de stare 5xx - Erori ale serverului
+Aceste erori indică faptul că serverul nu a reușit să proceseze cererea din cauza unei erori interne.
+
+500 Internal Server Error
+
+Descriere: O eroare generală a serverului a avut loc și serverul nu poate procesa cererea.
+Exemple: erori de server neprevăzute, excepții interne.
+501 Not Implemented
+
+Descriere: Serverul nu poate procesa cererea deoarece metoda solicitată nu este implementată.
+Exemple: metoda HTTP nu este acceptată de server.
+502 Bad Gateway
+
+Descriere: Serverul care acționează ca un gateway sau proxy a primit un răspuns invalid de la serverul de backend.
+Exemple: serverul intermediar nu poate obține răspunsul corect.
+503 Service Unavailable
+
+Descriere: Serverul nu poate procesa cererea din cauza unei supraaglomerări sau a unei întrețineri programate.
+Exemple: serverul este în mentenanță sau suprasolicitat.
+504 Gateway Timeout
+
+Descriere: Serverul care acționează ca un gateway sau proxy nu a primit un răspuns la timp de la serverul de backend.
+Exemple: timeout la așteptarea unui răspuns de la un alt server.
+505 HTTP Version Not Supported
+
+Descriere: Serverul nu acceptă versiunea HTTP utilizată în cerere.
+Exemple: cererea folosește o versiune HTTP incompatibilă cu serverul.
+506 Variant Also Negotiates
+
+Descriere: Serverul întâmpină un conflict în procesarea cererii din cauza unui mecanism de negociere a conținutului.
+507 Insufficient Storage
+
+Descriere: Serverul nu are suficient spațiu pentru a procesa cererea.
+508 Loop Detected
+
+Descriere: Serverul a detectat o buclă infinită în cadrul procesării cererii.
+510 Not Extended
+
+Descriere: Cererea necesită extinderea protocolului pentru a fi procesată.
+511 Network Authentication Required
+Descriere: Clientul trebuie să se autentifice pentru a accesa rețeaua (de exemplu, la nivel de proxy sau rețea).
+
+
+Trebuie să tratezi în mod activ erorile 400, 401, 403, 404, 405, 500, 503 și 504, deoarece sunt cele mai frecvente și relevante pentru interacțiunile utilizatorilor cu serverul.

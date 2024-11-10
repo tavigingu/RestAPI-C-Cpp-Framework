@@ -9,8 +9,8 @@ public:
     ~Server() { };
 
     void start();
-    void add_route(const std::string& path, const std::string& method, Router::HandlerFunction handler);
-
+    void __add_route__(const std::string& path, const std::string& method, Router::HandlerFunction handler);
+    std::string load_html_file(const std::string& filename);
 
 private:
     int m_server_socket;
@@ -18,12 +18,10 @@ private:
     std::unique_ptr<ThreadPool> m_threadPool;
     Router m_router;
 
-
     void initializeSocket();
     void configureSocket();
     void bindSocket();
     void listenOnSocket();
     void handleRequest(int client_socket);
-    void sendResponse(int client_socket, const char* content);
 };
 

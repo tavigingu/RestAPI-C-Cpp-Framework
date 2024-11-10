@@ -1,33 +1,103 @@
 #include "HTTPRequest.hpp"
 
-HttpRequest HttpRequest::parse(const std::string &request_text)
-{
-    HttpRequest request;
-        std::istringstream request_stream(request_text);
+nlohmann::json HttpRequest::toJson() const {
 
-        // Parsăm prima linie (metoda, calea și versiunea HTTP)
-        request_stream >> request.method >> request.path;
-        std::string version;
-        request_stream >> version;
+    if (headers_.count("Content-Type")) {
+        std::string contentType = headers_.at("Content-Type");
 
-        // Parsăm anteturile
-        std::string line;
-        while (std::getline(request_stream, line) && line != "\r") {
-            auto delimiter_pos = line.find(": ");
-            if (delimiter_pos != std::string::npos) {
-                std::string header_name = line.substr(0, delimiter_pos);
-                std::string header_value = line.substr(delimiter_pos + 2);
-                request.headers[header_name] = header_value;
+        contentType.erase(contentType.begin(), std::find_if(contentType.begin(), contentType.end(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        }));
+        contentType.erase(std::find_if(contentType.rbegin(), contentType.rend(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        }).base(), contentType.end());
+
+        if (contentType == "application/x-www-form-urlencoded") {
+            return parseBodyAsFormUrlEncoded();
+        } else if (contentType == "application/json") {
+            return nlohmann::json::parse(body_);
+        }
+    }
+    return nlohmann::json{};
+}
+
+
+nlohmann::json HttpRequest::parseBodyAsFormUrlEncoded() const {
+    
+    nlohmann::json json_result;
+    std::istringstream stream(body_);
+    std::string pair;
+    
+    while (std::getline(stream, pair, '&')) {
+        auto pos = pair.find('=');
+        if (pos != std::string::npos) {
+            std::string key = pair.substr(0, pos);
+            std::string value = pair.substr(pos + 1);
+            
+            // Decodează caracterele URL-encoded (ex: %40 -> @)
+            key = urlDecode(key);
+            value = urlDecode(value);
+            
+            json_result[key] = value;
+        }
+    }
+
+    return json_result;
+}
+
+// Funcție pentru decodificarea caracterelor URL-encoded
+std::string HttpRequest::urlDecode(const std::string& str) const {
+    std::string decoded;
+    char hex[3];
+    hex[2] = '\0';
+
+    for (size_t i = 0; i < str.length(); i++) {
+        if (str[i] == '%') {
+            if (i + 2 < str.length()) {
+                hex[0] = str[i + 1];
+                hex[1] = str[i + 2];
+                decoded += static_cast<char>(strtol(hex, nullptr, 16));
+                i += 2;
             }
+        } else if (str[i] == '+') {
+            decoded += ' ';
+        } else {
+            decoded += str[i];
         }
+    }
 
-        // Parsăm corpul cererii (dacă există)
-        if (request.headers.find("Content-Length") != request.headers.end()) {
-            int content_length = std::stoi(request.headers["Content-Length"]);
-            std::string body(content_length, '\0');
-            request_stream.read(&body[0], content_length);
-            request.body = body;
-        }
+    return decoded;
+}
 
-        return request;
+std::string HttpRequest::getMethod() const {
+    return method_;
+}
+
+std::string HttpRequest::getPath() const {
+    return path_;
+}
+
+std::unordered_map<std::string, std::string> HttpRequest::getHeaders() const {
+    return headers_;
+}
+
+std::string HttpRequest::getBody() const {
+    return body_;
+}
+
+// Settere pentru fiecare membru privat
+void HttpRequest::setMethod(const std::string& method) {
+    method_ = method;
+}
+
+void HttpRequest::setPath(const std::string& path) {
+    path_ = path;
+}
+
+void HttpRequest::setHeader(const std::string& header, const std::string& value) {
+    headers_[header] = value;  // Adaugă sau modifică perechea cheie-valoare
+}
+
+void HttpRequest::setBody(const std::string& body) {
+    body_ = body;
 }

@@ -1,6 +1,6 @@
 # Define compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++14 -pthread
+CXXFLAGS = -std=c++17 -pthread
 
 # Include paths
 INCLUDES = -Iinclude
