@@ -3,10 +3,10 @@ CXX = g++
 CXXFLAGS = -std=c++17 -pthread
 
 # Include paths
-INCLUDES = -Iinclude
+INCLUDES = -Iinclude -IDB  # Adaugă și directorul db la căile de includere
 
 # Source files and target
-SOURCES = $(wildcard src/*.cpp)
+SOURCES = $(wildcard src/*.cpp) DB/MyDB.cpp  # Adaugă MyDB.cpp la lista de surse
 TARGET = myserver
 
 # Define object files based on source files

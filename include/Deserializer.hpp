@@ -1,3 +1,4 @@
+#pragma once
 #include "HTTPRequest.hpp"
 #include <sstream>
 #include <string>

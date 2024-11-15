@@ -5,6 +5,7 @@
 #include <functional>
 #include <sstream>
 #include <sys/socket.h> 
+#include <regex>
 #include "HTTPRequest.hpp"
 #include "HTTPResponse.hpp"
 
@@ -16,8 +17,11 @@ public:
         routes_[method + " " + route] = handler;
     }
 
-    void route_request(const std::string& request_text, int client_socket);
+    void route_request(HttpRequest& request, HttpResponse& response);
 
 private:
+    void add_params_to_request(const std::string &route_pattern, const std::string &url, HttpRequest& request);
+    std::string convertToRegex(const std::string& route);
+
     std::unordered_map<std::string, HandlerFunction> routes_;
 };

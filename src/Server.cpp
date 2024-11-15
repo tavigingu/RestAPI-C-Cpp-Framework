@@ -28,6 +28,19 @@ Server::Server(bool useDynamicPool, int minThreads, int maxThreads, std::chrono:
     }
 }
 
+Server::Server(const int port, const int numThreads)
+    :m_port(port), m_server_socket(-1)
+{   
+    try { 
+        m_threadPool = std::make_unique<ThreadPool>(numThreads); 
+        initializeSocket(); 
+     } catch (const SocketException& e) {
+        std::cerr << "Failed to initialize server socket: " << e.what() << std::endl;
+        exit(EXIT_FAILURE);  // Terminate if socket initialization fails
+    }
+}
+
+
 void Server::start()
 {
     printf("Server is listening on port %d ... \n", m_port);
@@ -59,25 +72,6 @@ void Server::start()
 void Server::__add_route__(const std::string &path, const std::string &method, Router::HandlerFunction handler)
 {
     m_router.add_route(path, method, handler);
-}
-
-std::string Server::load_html_file(const std::string & filename)
-{
-    try {
-        std::ifstream file("html/" + filename);
-        if (!file.is_open()) {
-            throw FileException("Could not open file: " + filename);
-        }
-
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        return buffer.str();
-
-    } catch (const FileException& e) {
-        std::cerr << "File loading error: " << e.what() << std::endl;
-        
-        return "<html><body><h1>404 Not Found</h1><p>Page not found.</p></body></html>";
-    }
 }
 
 void Server::initializeSocket()
@@ -137,8 +131,19 @@ void Server::handleRequest(int client_socket)
         printf("Handling request on thread %ld: %s\n", std::this_thread::get_id(), buffer);
 
         std::string request_text(buffer, bytes_received);
-        
-        m_router.route_request(request_text, client_socket);
+
+        HttpRequest request = Deserializer::deserialize_request(request_text);
+        HttpResponse response(client_socket);
+
+        m_middleware.run(request, response);
+
+        if (response.isResponded()) {
+            return;
+        }
+
+
+        m_router.route_request(request, response);
+
 
         close(client_socket);  // Close after responding
 
@@ -147,5 +152,9 @@ void Server::handleRequest(int client_socket)
         close(client_socket);
     }
 }
+
+void Server::use(Middleware::MiddlewareFunc middleware) {
+        m_middleware.use(middleware);  
+    }
 
 

@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -10,7 +11,7 @@
 class ThreadPool 
 {
 public:
-    ThreadPool(size_t num_threads=std::thread::hardware_concurrency()); // initializes with the number of logical CPU cores by default
+    ThreadPool(size_t num_threads=std::thread::hardware_concurrency()/2); // initializes with the number of logical CPU cores by default
     virtual ~ThreadPool();
 
     void enqueue(std::function<void()> task);

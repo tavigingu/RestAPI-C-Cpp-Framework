@@ -1,13 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Page - C/C++ RESTful API Framework</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f2f5;
+      overflow-y: auto; /* Permite scroll vertical dacă pagina devine mai mare */
+    }
+
+    .background-title {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3em;
+      font-weight: bold;
+      color: rgba(50, 50, 50, 0.05);
+      text-align: center;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .main-container {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .button-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 40%;
+    }
+
+    .button-container button {
+      padding: 15px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%; /* Extinde butoanele pe toată lățimea containerului */
+    }
+
+    .button-container button:hover {
+      background-color: #0056b3;
+    }
+
+    .json-console {
+      width: 60%;
+      overflow-y: auto;
+      background-color: #222;
+      color: #0f0;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.9em;
+      white-space: pre-wrap;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1; /* Face ca consola să ocupe spațiul vertical rămas */
+      max-height: 100%;
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to the Main Page</h1>
-    <p>This is the main page of the server application.</p>
-    <button onclick="window.location.href='/reg'">Go to Register Page</button>
+  <div class="background-title">C/C++ RESTful API Framework</div>
+  <div class="main-container">
+    <div class="button-container">
+      <button onclick="getUsers()">Get Users</button>
+      <button onclick="getUserById()">Get User by ID</button>
+      <button onclick="deleteUserById()">Delete User by ID</button>
+      <button onclick="putUser()">PUT</button>
+      <button onclick="clearConsole()">Clear Console</button>
+    </div>
+    <div class="json-console" id="jsonConsole"></div>
+  </div>
+
+  <script>
+    function logToConsole(data) {
+      const consoleElement = document.getElementById('jsonConsole');
+      consoleElement.innerText += JSON.stringify(data, null, 2) + '\n\n';
+      consoleElement.scrollTop = consoleElement.scrollHeight;
+    }
+
+    function clearConsole() {
+      const consoleElement = document.getElementById('jsonConsole');
+      consoleElement.innerText = '';
+    }
+
+    async function getUsers() {
+      try {
+        const response = await fetch('/get_users');
+        if (!response.ok) throw new Error('Error fetching users');
+        const data = await response.json();
+        logToConsole(data);
+      } catch (error) {
+        logToConsole({ error: error.message });
+      }
+    }
+
+    async function getUserById() {
+      const userId = prompt("Introduceți ID-ul utilizatorului:");
+      if (userId) {
+        try {
+          const response = await fetch(`/get_user/${userId}`);
+          if (!response.ok) throw new Error('Error fetching user by ID');
+          const data = await response.json();
+          logToConsole(data);
+        } catch (error) {
+          logToConsole({ error: error.message });
+        }
+      }
+    }
+
+    async function deleteUserById() {
+      const userId = prompt("Introduceți ID-ul utilizatorului de șters:");
+      if (userId) {
+        try {
+          const response = await fetch(`/delete_user/${userId}`, { method: 'DELETE' });
+          if (!response.ok) throw new Error('Error deleting user');
+          const data = await response.json();
+          logToConsole(data);
+        } catch (error) {
+          logToConsole({ error: error.message });
+        }
+      }
+    }
+
+    async function putUser() {
+      const userId = prompt("Introduceți ID-ul utilizatorului de modificat:");
+      const newData = prompt("Introduceți datele noi ale utilizatorului în format JSON:");
+      if (userId && newData) {
+        try {
+          const parsedData = JSON.parse(newData); // Verifică dacă JSON-ul este valid
+          const response = await fetch(`/update_user/${userId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(parsedData)
+          });
+          if (!response.ok) throw new Error('Error updating user');
+          const data = await response.json();
+          logToConsole(data);
+        } catch (error) {
+          logToConsole({ error: error.message });
+        }
+      }
+    }
+  </script>
 </body>
 </html>

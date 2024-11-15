@@ -8,6 +8,8 @@ void HttpResponse::Send(nlohmann::json json_obj)
     std::string response_text = Serializer::serialize(*this);
 
     send(client_socket_, response_text.c_str(), response_text.size(), 0);
+
+    m_respondend = true;
 }
 
 void HttpResponse::SendHtmlPage(const std::string &filename)
@@ -15,7 +17,12 @@ void HttpResponse::SendHtmlPage(const std::string &filename)
     body_ = load_html_file(filename);
     std::string response_text = Serializer::serialize(*this);
 
+    status_code_ = 200;
+    status_message_= "OK";
+
     send(client_socket_, response_text.c_str(), response_text.size(), 0);
+
+    m_respondend = true;
 }
 
 std::string HttpResponse::load_html_file(const std::string &filename)
@@ -75,7 +82,29 @@ void HttpResponse::setContentType(const std::string &content_type)
     setHeader("Content-Type", content_type);
 }
 
+std::string HttpResponse::to_string() const
+{
+
+    std::stringstream ss;
+
+    // Statusul HTTP
+    ss << "HTTP/1.1 " << status_code_ << " " << status_message_ << "\r\n";
+
+    // Capetele HTTP
+    for (const auto& header : headers_) {
+        ss << header.first << ": " << header.second << "\r\n";
+    }
+
+    // Dacă există un corp, îl adăugăm
+    if (!body_.empty()) {
+        ss << "\r\n" << body_;
+    }
+
+    return ss.str();
+}
+
+
 void HttpResponse::setContentType(const ContentType& content_type)
 {
-    setHeader("Content-Type", to_string(content_type));
+    setHeader("Content-Type", content_to_string(content_type));
 }

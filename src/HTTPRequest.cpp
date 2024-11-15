@@ -81,6 +81,15 @@ std::unordered_map<std::string, std::string> HttpRequest::getHeaders() const {
     return headers_;
 }
 
+std::string HttpRequest::getHeader(const std::string& header) const
+{
+   auto it = headers_.find(header); // Caută antetul în map
+        if (it != headers_.end()) {
+            return it->second;           // Dacă antetul este găsit, returnează valoarea sa
+        }
+        return ""; // Returnează un string gol dacă antetul nu este găsit
+}
+
 std::string HttpRequest::getBody() const {
     return body_;
 }
@@ -101,3 +110,16 @@ void HttpRequest::setHeader(const std::string& header, const std::string& value)
 void HttpRequest::setBody(const std::string& body) {
     body_ = body;
 }
+
+void HttpRequest::setParam(const std::string& key, const std::string& value) {
+        url_params_[key] = value;
+}
+
+std::string HttpRequest::getParam(const std::string& key) const {
+    auto it = url_params_.find(key);
+    if (it != url_params_.end()) {
+        return it->second;
+    }
+    
+    return "";
+    }

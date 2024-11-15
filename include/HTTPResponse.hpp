@@ -19,6 +19,7 @@ public:
  
     void Send(nlohmann::json json_obj);
     void SendHtmlPage(const std::string& filename);
+    inline bool isResponded() const { return m_respondend; }
 
     int getStatusCode() const;
     const std::string& getStatusMessage() const;
@@ -33,6 +34,25 @@ public:
     void setContentType(const ContentType& content_type);
     void setContentType(const std::string& content_type);
 
+    std::string to_string() const {
+        std::stringstream ss;
+
+        // Statusul HTTP
+        ss << "HTTP/1.1 " << status_code_ << " " << status_message_ << "\r\n";
+
+        // Capetele HTTP
+        for (const auto& header : headers_) {
+            ss << header.first << ": " << header.second << "\r\n";
+        }
+
+        // Dacă există un corp, îl adăugăm
+        if (!body_.empty()) {
+            ss << "\r\n" << body_;
+        }
+
+        return ss.str();
+}
+
 private:
     std::string load_html_file(const std::string& filename);
 
@@ -41,6 +61,7 @@ private:
     std::string status_message_ = "OK";
     std::unordered_map<std::string, std::string> headers_;
     std::string body_;
+    bool m_respondend = false;
 
 
 

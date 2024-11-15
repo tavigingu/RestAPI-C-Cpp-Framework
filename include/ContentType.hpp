@@ -11,7 +11,7 @@ enum class ContentType {
 };
 
 
-inline std::string to_string(ContentType content_type) {
+inline std::string content_to_string(ContentType content_type) {
     switch (content_type) {
         case ContentType::HTML:       return "text/html";
         case ContentType::JSON: return "application/json";
