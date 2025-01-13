@@ -89,23 +89,27 @@
 
   <script>
     async function login() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      
-      try {
-        const response = await fetch('/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-        if (!response.ok) throw new Error('Login failed');
-        
-        window.location.href = '/main';  // Redirect to the main page
-      } catch (error) {
-        alert('Eroare la logare: ' + error.message);
-      }
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.error || 'Login failssed');
+
+      // Redirecționare către pagina principală
+      window.location.href = data.redirect;
+    } catch (error) {
+      alert('Eroare la logare: ' + error.message);
     }
+}
+
 
     async function signUp() {
       const email = document.getElementById('email').value;
